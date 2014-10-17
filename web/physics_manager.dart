@@ -1,5 +1,6 @@
 import 'dart:html';
 import 'dart:math';
+import 'dart:async';
 
 class PhysicsManager
 {
@@ -15,6 +16,11 @@ class PhysicsManager
     this.balls = new List<Ball>();
     
     this.rand = new Random();
+  }
+  
+  void Begin()
+  {
+    scheduleMicrotask(Start);
   }
   
   void Start()

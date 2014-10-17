@@ -6,6 +6,6 @@ void main() {
   CanvasElement el = querySelector("#my_canvas");
   
   PhysicsManager mgr = new PhysicsManager(el);
-  scheduleMicrotask(mgr.Start);
+  mgr.Begin();
 }
 
