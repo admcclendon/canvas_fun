@@ -17,6 +17,9 @@ $RECYCLE.BIN/
 # Dart package includes
 packages/
 
+# Ignore any built files
+build/
+
 # =========================
 # Operating System Files
 # =========================
