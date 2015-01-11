@@ -2,6 +2,12 @@ import 'dart:html';
 import 'dart:math';
 import 'dart:async';
 
+import 'objects/ball.dart';
+import 'utility/vector.dart';
+
+final num NumberOfBalls = 0;
+final num WallFactor = 0.8;
+
 class PhysicsManager
 {
   CanvasElement el;
@@ -10,12 +16,63 @@ class PhysicsManager
   num last_time;
   Random rand;
   
+  String label = "TEST";
+  
+  CoordTransform worldToCanvas;
+  CoordTransform canvasToWorld;
+  
   PhysicsManager(this.el)
   {
+    ResizeCanvas();
+    
+    this.el.onClick.listen(ClickEvent);
+    this.el.onMouseDown.listen(MouseDown);
+    this.el.onMouseUp.listen(MouseUp);
+    window.onResize.listen(WindowResize);
+    
     this.context = this.el.getContext("2d");
     this.balls = new List<Ball>();
     
     this.rand = new Random();
+    
+    worldToCanvas = (Vector v) => new Vector(v.x, el.height - v.y);
+    canvasToWorld = (Vector v) => new Vector(v.x, el.height - v.y);
+  }
+  
+  void WindowResize(Event e)
+  {
+    ResizeCanvas();
+  }
+  
+  void ResizeCanvas()
+  {
+    this.el.setAttribute("width", window.innerWidth.toString());
+    this.el.setAttribute("height", window.innerHeight.toString());
+  }
+  
+  void ClickEvent(MouseEvent e)
+  {
+    
+//    label = "Client - X: " + e.client.x.toString() + ", Y: " + e.client.y.toString()
+//        + "Offset - X: " + e.offset.x.toString() + ", Y: " + e.offset.y.toString();
+    label = "Number of Balls: " + this.balls.length.toString();
+  }
+  
+  Vector startPos = null;
+  void MouseDown(MouseEvent e)
+  {
+    startPos = new Vector(e.offset.x, e.offset.y);
+  }
+  
+  void MouseUp(MouseEvent e)
+  {
+    if (startPos != null)
+    {
+      Vector v = new Vector(e.offset.x, e.offset.y);
+      
+      Ball b = new Ball(15, canvasToWorld(v), canvasToWorld(v) - canvasToWorld(startPos));
+      this.balls.add(b);
+    }
   }
   
   void Begin()
@@ -25,7 +82,7 @@ class PhysicsManager
   
   void Start()
   {
-    for (num i = 0; i < 15; i++)
+    for (num i = 0; i < NumberOfBalls; i++)
     {
       num j = 0;
       while (j < 100) // only try 100 times to find one that fits
@@ -70,15 +127,12 @@ class PhysicsManager
     }
     last_time = t;
     
-    context..fillStyle = "rgba(0, 0, 0, 1.0)"
-        ..fillRect(0, 0, el.width, el.height);
+    Draw(dt/1000);
     
+    // Apply collision logic for next step
     for (num i = 0; i < this.balls.length; i++)
     {
       Ball b = this.balls[i];
-      
-      b.Move(dt/1000);
-      b.Draw(this.context);
       
       // Collision logic
       for (num j = i + 1; j < this.balls.length; j++)
@@ -86,13 +140,7 @@ class PhysicsManager
         Ball b2 = this.balls[j];
         if (b.CollisionDetect(b2))
         {
-          Vector dv1 = b.vel - b2.vel;
-          Vector dv2 = b2.vel - b.vel;
-          Vector dx1 = b.pos - b2.pos;
-          Vector dx2 = b2.pos - b.pos;
-          
-          b.vel = b.vel - dx1 * ((2*b2.mass)/(b.mass + b2.mass))*((dv1.Dot(dx1))/(dx1.Mag() * dx1.Mag()));
-          b2.vel = b2.vel - dx2 * ((2*b.mass)/(b.mass + b2.mass))*((dv2.Dot(dx2))/(dx2.Mag() * dx2.Mag()));
+          b.Collide(b2);
         }
       }
       
@@ -119,83 +167,28 @@ class PhysicsManager
         {
           b.top = this.el.height;
         }
-        b.vel.y *= -1;
+        b.vel.y *= -WallFactor;
       }
     }
+    
     window.requestAnimationFrame(Step);
   }
-}
-
-class Ball
-{
-  num radius, mass;
-  Vector pos, vel;
-  List<Vector> trace_pos;
   
-  num get left => pos.x - radius;
-      set left(num v) => pos.x = v + radius;
-  num get right => pos.x + radius;
-      set right(num v) => pos.x = v - radius; 
-  num get top => pos.y + radius;
-      set top(num v) => pos.y = v - radius;
-  num get bottom => pos.y - radius;
-      set bottom(num v) => pos.y = v + radius;
-  
-  Ball(this.radius, this.pos, this.vel)
+  void Draw(num dt)
   {
-    mass = this.radius * this.radius;
-    trace_pos = new List<Vector>.filled(50, this.pos);
-  }
-  
-  void Move(num t)
-  {
-    this.pos = this.pos + this.vel * t;
-    List<Vector> newList = trace_pos.sublist(1, trace_pos.length);
-    newList.add(this.pos);
-    trace_pos = newList;
-  }
-  
-  void Draw(CanvasRenderingContext2D context)
-  {
-    context..fillStyle = "rgba(255, 0, 0, 0.8)"
-        ..beginPath()
-        ..arc(this.pos.x, this.pos.y, radius, 0, 2*PI)
-        ..fill()
-        ..closePath();
-    for (num i = 0; i < trace_pos.length; i++)
+    context..fillStyle = "rgba(0, 0, 0, 1.0)"
+            ..fillRect(0, 0, el.width, el.height);
+        
+    // Move and draw
+    for (num i = 0; i < this.balls.length; i++)
     {
-      num opacity = i * (0.8/trace_pos.length);
-      context..fillStyle = "rgba(255, 0, 0, " + opacity.toString() + ")"
-          ..beginPath()
-          ..arc(trace_pos[i].x, trace_pos[i].y, radius/4, 0, 2*PI)
-          ..fill()
-          ..closePath();
+      Ball b = this.balls[i];
+      
+      b.Move(dt, new Vector(0, -980*dt));
+      b.Draw(this.context, (v) => new Vector(v.x, this.el.height - v.y));
     }
-  }
-  
-  bool CollisionDetect(Ball b)
-  {
-    return (b.pos - pos).Mag() <= b.radius + radius;
-  }
-}
-
-class Vector
-{
-  num x, y;
-  
-  Vector(this.x, this.y);
-  
-  operator +(Vector v) { return new Vector(this.x + v.x, this.y + v.y); }
-  operator -(Vector v) { return new Vector(this.x - v.x, this.y - v.y); }
-  operator *(num a) { return new Vector(this.x * a, this.y * a); }
-  
-  num Mag()
-  {
-    return sqrt(x*x + y*y); // sqrt(x^2 + y^2)
-  }
-  
-  num Dot(Vector v)
-  {
-    return x * v.x + y * v.y;
+    
+    context.fillStyle = "rgb(255, 255, 255)";
+    context.fillText(label, 0, 600);
   }
 }

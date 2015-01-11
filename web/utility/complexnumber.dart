@@ -1,3 +1,5 @@
+library utility.complex;
+
 import "dart:math";
 
 class ComplexNumber
