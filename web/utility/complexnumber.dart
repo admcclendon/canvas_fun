@@ -2,26 +2,26 @@ library utility.complex;
 
 import "dart:math";
 
-class ComplexNumber
+class Complex
 {
   num _real, _imag;
   
   num get real => this._real;
   num get imag => this._imag;
   
-  ComplexNumber([this._real = 0, this._imag = 0]);
+  Complex([this._real = 0, this._imag = 0]);
   
   ///
   /// @function e
   /// 
-  /// @returns ComplexNumber
+  /// @returns Complex
   /// 
-  /// This function creates a ComplexNumber with the form:
+  /// This function creates a Complex with the form:
   /// e^(i*x) = cox(x) + i*sin(x)
   /// 
-  static ComplexNumber e(num arg)
+  static Complex e(num arg)
   {
-    return new ComplexNumber(cos(arg), sin(arg));
+    return new Complex(cos(arg), sin(arg));
   }
  
   ///
@@ -55,66 +55,66 @@ class ComplexNumber
   ///
   /// @function Conj
   /// 
-  /// @returns ComplexNumber
+  /// @returns Complex
   /// 
   /// This function returns the complex conjugate of the complex number.
   /// z = x + i*y
   /// Conj = x - i*y
   /// 
-  ComplexNumber Conj()
+  Complex Conj()
   {
-    return new ComplexNumber(real, -imag);
+    return new Complex(real, -imag);
   }
   
   ///
-  /// This section handles the operations +, -, *, and / of a ComplexNumber with
-  /// another ComplexNumber or a num
+  /// This section handles the operations +, -, *, and / of a Complex with
+  /// another Complex or a num
   /// 
   operator +(var x)
   {
-    if (x is ComplexNumber)
+    if (x is Complex)
     {
-      return new ComplexNumber(real + x.real, imag + x.imag);
+      return new Complex(real + x.real, imag + x.imag);
     }
     else if (x is num)
     {
-      return new ComplexNumber(real + x, imag);
+      return new Complex(real + x, imag);
     }
   }
   
   operator -(var x)
   {
-    if (x is ComplexNumber)
+    if (x is Complex)
     {
-      return new ComplexNumber(real-x.real, imag-x.imag);
+      return new Complex(real-x.real, imag-x.imag);
     }
     else if (x is num)
     {
-      return new ComplexNumber(real-x, imag);
+      return new Complex(real-x, imag);
     }
   }
   
   operator *(var x)
   {
-    if (x is ComplexNumber)
+    if (x is Complex)
     {
-      return new ComplexNumber(real*x.real-imag*x.imag, real*x.imag+x.real*imag);
+      return new Complex(real*x.real-imag*x.imag, real*x.imag+x.real*imag);
     }
     else if (x is num)
     {
-      return new ComplexNumber(real*x, imag*x);
+      return new Complex(real*x, imag*x);
     }
   }
   
   operator /(var x)
   {
-    if (x is ComplexNumber)
+    if (x is Complex)
     {
-      return new ComplexNumber((real*x.real + imag*x.imag)/x.Mag2(), (x.real*imag - real*x.imag)/x.Mag2());
+      return new Complex((real*x.real + imag*x.imag)/x.Mag2(), (x.real*imag - real*x.imag)/x.Mag2());
     }
     else if (x is num)
     {
-      return new ComplexNumber(real/x, imag/x);
+      return new Complex(real/x, imag/x);
     }
   }
 }
