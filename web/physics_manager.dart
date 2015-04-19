@@ -6,7 +6,7 @@ import 'objects/ball.dart';
 import 'utility/vector.dart';
 
 final num NumberOfBalls = 0;
-final num WallFactor = 0.8;
+final num WallFactor = 0.8; // KE = 0.5 * m * v^2; v = sqrt(2*KE/m)
 
 class PhysicsManager
 {
