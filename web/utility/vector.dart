@@ -45,6 +45,137 @@ num MatrixMultiplication(int i, int j, Matrix A, Matrix B)
   return result;
 }
 
+num MatrixAddition(int i, int j, Matrix A, Matrix B)
+{
+  return A[[i,j]] + B[[i,j]];
+}
+
+num RotationX(int i, int j, num theta)
+{
+  if (i == 1)
+  {
+    if (j == 1)
+    {
+      return cos(-theta);
+    }
+    else if (j == 2)
+    {
+      return -sin(-theta);
+    }
+    else
+    {
+      return 0;
+    }
+  }
+  else if (i == 2)
+  {
+    if (j == 1)
+    {
+      return sin(-theta);
+    }
+    else if (j == 2)
+    {
+      return cos(-theta);
+    }
+    else
+    {
+      return 0;
+    }
+  }
+  else if (i == j)
+  {
+    return 1;
+  }
+  else
+  {
+    return 0;
+  }
+}
+
+num RotationY(int i, int j, num theta)
+{
+  if (i == 0)
+  {
+    if (j == 0)
+    {
+      return cos(-theta);
+    }
+    else if (j == 2)
+    {
+      return sin(-theta);
+    }
+    else
+    {
+      return 0;
+    }
+  }
+  else if (i == 2)
+  {
+    if (j == 0)
+    {
+      return -sin(-theta);
+    }
+    else if (j == 2)
+    {
+      return cos(-theta);
+    }
+    else
+    {
+      return 0;
+    }
+  }
+  else if (i == j)
+  {
+    return 1;
+  }
+  else 
+  {
+    return 0;
+  }
+}
+
+num RotationZ(int i, int j, num theta)
+{
+  if (i == 0)
+  {
+    if (j == 0)
+    {
+      return cos(-theta);
+    }
+    else if (j == 1)
+    {
+      return -sin(-theta);
+    }
+    else
+    {
+      return 0;
+    }
+  }
+  else if (i == 1)
+  {
+    if (j == 0)
+    {
+      return sin(-theta);
+    }
+    else if (j == 1)
+    {
+      return cos(-theta);
+    }
+    else
+    {
+      return 0;
+    }
+  }
+  else if (i == j)
+  {
+    return 1;
+  }
+  else 
+  {
+    return 0;
+  }
+}
+
 num IdentityMatrix(int i, int j)
 {
   if (i == j)
@@ -95,5 +226,14 @@ class Matrix
       throw new Exception('The inner dimensions of the matricies must match.');
     }
     return new Matrix(this.m, m.n, (int i, int j) => MatrixMultiplication(i, j, this, m));
+  }
+  
+  operator +(Matrix m)
+  {
+    if (this.m != m.m || this.n != m.n)
+    {
+      throw new Exception('The matrix dimensions must match.');
+    }
+    return new Matrix(this.m, this.n, (int i, int j) => MatrixAddition(i, j, this, m));
   }
 }
