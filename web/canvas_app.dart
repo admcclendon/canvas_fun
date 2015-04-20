@@ -80,19 +80,26 @@ class CanvasManager
     last_time = t;
     
     this.cubes[0].position = new Point3D(0, 0, 10 + 5*sin(2*PI*.0001*t)); // .1Hz (t is in ms) (.1 / 1000 = .0001)
-//    this.cubes[0].angles.z = (5*PI/180)*t/1000 % 2*PI;
+    this.cubes[0].angles.y = (5*PI/180)*t/1000 % 2*PI;
+    this.cubes[0].angles.x = (PI/180)*t/1000 % 2*PI;
     List<Face> toDraw = this.cubes[0].Transform((Point3D pt) => pt);
-    Matrix toScreen = new Matrix.I(4);
-    toScreen[[3, 3]] = 0;
-    toScreen[[3, 2]] = 2.414213;
+//    Matrix toScreen = new Matrix.I(4);
+//    toScreen[[3, 3]] = 0;
+//    toScreen[[3, 2]] = 2.414213;
     Point3D e = new Point3D(0, 0, 2.414213); // this is for a field of view of 45 deg
     this.context..fillStyle = "rgb(255, 255, 255)"
           ..fillRect(0, 0, this.el.width, this.el.height);
     
-    this.context.strokeStyle = "rgb(0, 0, 255)";
+    this.context.fillStyle = "rgb(0, 0, 255)";
+    this.context.strokeStyle = "rgb(0, 0, 0)";
     
     num sx = 1;
     num sy = 1;
+    num ratio = this.el.width/this.el.height;
+    if (this.el.width > this.el.height)
+    {
+//      sx += (this.el.width - this.el.height) / (2 * this.el.height);
+    }
     for (int i = 0; i < toDraw.length; i++)
     {
       this.context.beginPath();
@@ -102,13 +109,14 @@ class CanvasManager
         
         if (j == 0)
         {
-          this.context.moveTo((p.x*e.z/p.z + 1)*el.width/2, (1 - p.y*e.z/p.z)*el.height/2);
+          this.context.moveTo((p.x*e.z/p.z/ratio + sx)*el.width/2, (sy - p.y*e.z/p.z)*el.height/2);
         }
         else
         {
-          this.context.lineTo((p.x*e.z/p.z + 1)*el.width/2, (1 - p.y*e.z/p.z)*el.height/2);
+          this.context.lineTo((p.x*e.z/p.z/ratio + sx)*el.width/2, (sy - p.y*e.z/p.z)*el.height/2);
         }
       }
+//      this.context.fill();
       this.context.stroke();
       this.context.closePath();
     }
@@ -179,6 +187,8 @@ class Point3D extends Matrix
   num get x => this[[0, 0]];
   num get y => this[[1, 0]];
   num get z => this[[2, 0]];
+  void set x(num value) { this[[0,0]] = value; }
+  void set y(num value) { this[[1,0]] = value; }
   void set z(num value) { this[[2,0]] = value; } 
   
   Point3D(num x, num y, num z) : super(3, 1)
