@@ -63,6 +63,8 @@ class CanvasManager
   {
     // Initialize objects in the scene..
     this.cubes.add(new Cube(new Point3D(0, 0, 10)));
+    this.cubes.add(new Cube(new Point3D(3, 0, 10)));
+    this.cubes.add(new Cube(new Point3D(-3, 0, 10)));
     this.last_time = new DateTime.now().millisecondsSinceEpoch;
     RequestRedraw();
   }
@@ -79,7 +81,8 @@ class CanvasManager
     num dt = t - last_time;
     last_time = t;
     
-    this.cubes[0].position = new Point3D(0, 0, 10 + 5*sin(2*PI*.0001*t)); // .1Hz (t is in ms) (.1 / 1000 = .0001)
+    this.cubes[0].position.y = 5*sin(2*PI*.0001*t); // .1Hz (t is in ms) (.1 / 1000 = .0001)
+    this.cubes[1].position.y = 4*cos(2*PI*.0001*t);
     this.cubes[0].angles.y = (5*PI/180)*t/1000 % 2*PI;
     this.cubes[0].angles.x = (PI/180)*t/1000 % 2*PI;
     List<Face> toDraw = this.cubes[0].Transform((Point3D pt) => pt);
@@ -100,25 +103,29 @@ class CanvasManager
     {
 //      sx += (this.el.width - this.el.height) / (2 * this.el.height);
     }
-    for (int i = 0; i < toDraw.length; i++)
+    for (int i = 0; i < this.cubes.length; i++)
     {
-      this.context.beginPath();
-      for (int j = 0; j < toDraw[i].verts.length; j++)
+      List<Face> toDraw = this.cubes[i].Transform((Point3D pt) => pt);
+      for (int j = 0; j < toDraw.length; j++)
       {
-        Point3D p = toDraw[i].verts[j];
-        
-        if (j == 0)
+        this.context.beginPath();
+        for (int k = 0; k < toDraw[j].verts.length; k++)
         {
-          this.context.moveTo((p.x*e.z/p.z/ratio + sx)*el.width/2, (sy - p.y*e.z/p.z)*el.height/2);
+          Point3D p = toDraw[j].verts[k];
+          
+          if (k == 0)
+          {
+            this.context.moveTo((p.x*e.z/p.z/ratio + sx)*el.width/2, (sy - p.y*e.z/p.z)*el.height/2);
+          }
+          else
+          {
+            this.context.lineTo((p.x*e.z/p.z/ratio + sx)*el.width/2, (sy - p.y*e.z/p.z)*el.height/2);
+          }
         }
-        else
-        {
-          this.context.lineTo((p.x*e.z/p.z/ratio + sx)*el.width/2, (sy - p.y*e.z/p.z)*el.height/2);
-        }
+//        this.context.fill();
+        this.context.stroke();
+        this.context.closePath();
       }
-//      this.context.fill();
-      this.context.stroke();
-      this.context.closePath();
     }
     window.requestAnimationFrame(Step);
   }
@@ -152,12 +159,17 @@ class Cube
     return Rx*Ry*Rz;
   }
   
+  Point3D ToWorld(Point3D pt)
+  {
+    return new Point3D.fromMatrix(this.RotationMatrix()*pt + this.position);
+  }
+  
   List<Face> Transform(Transformation trans)
   {
     List<Face> result = new List<Face>(this.faces.length);
     for (int i = 0; i < this.faces.length; i++)
     {
-      result[i] = new Face(this.faces[i].Transform((Point3D pt) => trans(new Point3D.fromMatrix(this.RotationMatrix()*pt + this.position))));
+      result[i] = new Face(this.faces[i].Transform((Point3D pt) => trans(this.ToWorld(pt))));
     }
     return result;
   }
