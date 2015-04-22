@@ -71,7 +71,8 @@ class CanvasManager
     last_time = t;
     
     num ts = t/1000; // convert time to seconds
-    this.cubes[0].position.x = 3*sin(2*PI*.1*ts); // .1Hz (t is in ms) (.1 / 1000 = .0001)
+    this.cubes[0].position.x = 2*cos(2*PI*.2*ts); // .1Hz (t is in ms) (.1 / 1000 = .0001)
+    this.cubes[0].position.y = 3*sin(2*PI*.1*ts);
     this.cubes[1].position.y = 2*cos(2*PI*.1*ts);
     this.cubes[1].angles.y = (5*PI/180)*ts % 2*PI;
     this.cubes[0].angles.x = (5*PI/180)*ts % 2*PI;
