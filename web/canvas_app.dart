@@ -70,10 +70,12 @@ class CanvasManager
     num dt = t - last_time;
     last_time = t;
     
-//    this.cubes[0].position.y = 3*sin(2*PI*.0001*t); // .1Hz (t is in ms) (.1 / 1000 = .0001)
-    this.cubes[1].position.y = 4*cos(2*PI*.0001*t);
-    this.cubes[0].angles.y = (5*PI/180)*t/1000 % 2*PI;
-    this.cubes[0].angles.x = (5*PI/180)*t/1000 % 2*PI;
+    num ts = t/1000; // convert time to seconds
+    this.cubes[0].position.x = 3*sin(2*PI*.1*ts); // .1Hz (t is in ms) (.1 / 1000 = .0001)
+    this.cubes[1].position.y = 2*cos(2*PI*.1*ts);
+    this.cubes[1].angles.y = (5*PI/180)*ts % 2*PI;
+    this.cubes[0].angles.x = (5*PI/180)*ts % 2*PI;
+    this.cubes[2].angles.z = (5*PI/180)*ts % 2*PI;
 //    Matrix toScreen = new Matrix.I(4);
 //    toScreen[[3, 3]] = 0;
 //    toScreen[[3, 2]] = 2.414213;
