@@ -100,6 +100,7 @@ class CanvasManager
         if ((v[2].x - v[0].x)*(v[1].y - v[0].y) < (v[2].y - v[0].y)*(v[1].x - v[0].x))
           continue;
         this.context.beginPath();
+        this.context.fillStyle = this.cubes[i].faces[j].color;
         for (int k = 0; k < this.cubes[i].faces[j].verts.length + 1; k++)
         {
           Point3D p = v[k % this.cubes[i].faces[j].verts.length];
@@ -113,6 +114,7 @@ class CanvasManager
             this.context.lineTo((p.x + sx)*el.width/2, (sy - p.y)*el.height/2);
           }
         }
+        this.context.fill();
         this.context.stroke();
         this.context.closePath();
       }
@@ -152,18 +154,18 @@ class Cube
     }
     
     // Use the transformable verts for the face definition so it is drawn correctly on the screen
-    this.faces[0] = new Face([this.trans_verts[0], this.trans_verts[1], this.trans_verts[2]]);
-    this.faces[1] = new Face([this.trans_verts[0], this.trans_verts[2], this.trans_verts[3]]);
-    this.faces[2] = new Face([this.trans_verts[1], this.trans_verts[5], this.trans_verts[6]]);
-    this.faces[3] = new Face([this.trans_verts[1], this.trans_verts[6], this.trans_verts[2]]);
-    this.faces[4] = new Face([this.trans_verts[0], this.trans_verts[4], this.trans_verts[1]]);
-    this.faces[5] = new Face([this.trans_verts[1], this.trans_verts[4], this.trans_verts[5]]);
-    this.faces[6] = new Face([this.trans_verts[5], this.trans_verts[7], this.trans_verts[6]]);
-    this.faces[7] = new Face([this.trans_verts[5], this.trans_verts[4], this.trans_verts[7]]);
-    this.faces[8] = new Face([this.trans_verts[4], this.trans_verts[3], this.trans_verts[7]]);
-    this.faces[9] = new Face([this.trans_verts[4], this.trans_verts[0], this.trans_verts[3]]);
-    this.faces[10] = new Face([this.trans_verts[3], this.trans_verts[6], this.trans_verts[7]]);
-    this.faces[11] = new Face([this.trans_verts[3], this.trans_verts[2], this.trans_verts[6]]);
+    this.faces[0] = new Face([this.trans_verts[0], this.trans_verts[1], this.trans_verts[2]], "rgb(255, 0, 0)");
+    this.faces[1] = new Face([this.trans_verts[0], this.trans_verts[2], this.trans_verts[3]], "rgb(255, 0, 0)");
+    this.faces[2] = new Face([this.trans_verts[1], this.trans_verts[5], this.trans_verts[6]], "rgb(255, 255, 0)");
+    this.faces[3] = new Face([this.trans_verts[1], this.trans_verts[6], this.trans_verts[2]], "rgb(255, 255, 0)");
+    this.faces[4] = new Face([this.trans_verts[0], this.trans_verts[4], this.trans_verts[1]], "rgb(255, 0, 255)");
+    this.faces[5] = new Face([this.trans_verts[1], this.trans_verts[4], this.trans_verts[5]], "rgb(255, 0, 255)");
+    this.faces[6] = new Face([this.trans_verts[5], this.trans_verts[7], this.trans_verts[6]], "rgb(0, 255, 255)");
+    this.faces[7] = new Face([this.trans_verts[5], this.trans_verts[4], this.trans_verts[7]], "rgb(0, 255, 255)");
+    this.faces[8] = new Face([this.trans_verts[4], this.trans_verts[3], this.trans_verts[7]], "rgb(0, 255, 0)");
+    this.faces[9] = new Face([this.trans_verts[4], this.trans_verts[0], this.trans_verts[3]], "rgb(0, 255, 0)");
+    this.faces[10] = new Face([this.trans_verts[3], this.trans_verts[6], this.trans_verts[7]], "rgb(0, 0, 255)");
+    this.faces[11] = new Face([this.trans_verts[3], this.trans_verts[2], this.trans_verts[6]], "rgb(0, 0, 255)");
 //    faces[0] = new Face([new Point3D(-1, 1, 1), new Point3D(-1, 1, -1), new Point3D(-1, -1, -1), new Point3D(-1, -1, 1)]); // Left
 //    faces[1] = new Face([new Point3D(-1, 1, -1), new Point3D(1, 1, -1), new Point3D(1, -1, -1), new Point3D(-1, -1, -1)]); // Front
 //    faces[2] = new Face([new Point3D(-1, 1, 1), new Point3D(1, 1, 1), new Point3D(1, 1, -1), new Point3D(-1, 1, -1)]); // Top
@@ -194,10 +196,6 @@ class Cube
     {
       this.trans_verts[i].Transform(trans(this.ToWorld(this.verts[i])));
     }
-//    for (int i = 0; i < this.faces.length; i++)
-//    {
-//      result[i] = new Face(this.faces[i].Transform((Point3D pt) => trans(this.ToWorld(pt))));
-//    }
     return this.faces;
   }
 }
@@ -207,8 +205,9 @@ typedef Point3D Transformation(Point3D pt);
 class Face
 {
   List<Point3D> verts = new List<Point3D>();
+  String color;
   
-  Face([this.verts]);
+  Face([this.verts, this.color]);
   
   List<Point3D> Transform(Transformation trans)
   {
