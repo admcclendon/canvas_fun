@@ -17,10 +17,7 @@ typedef num MatrixGenerator(int i, int j);
 num MatrixMultiplication(int i, int j, Matrix A, Matrix B)
 {
   num result = 0;
-  for (int k = 0; k < A.m; k++)
-  {
-    result += A[[i, k]] * B[[k, j]];
-  }
+  for (int k = 0; k < A.m; result += A[[i, k]] * B[[k, j]], k++);
   return result;
 }
 
@@ -214,5 +211,14 @@ class Matrix
       throw new Exception('The matrix dimensions must match.');
     }
     return new Matrix(this.m, this.n, (int i, int j) => MatrixAddition(i, j, this, m));
+  }
+  
+  operator -(Matrix m)
+  {
+    if (this.m != m.m || this.n != m.n)
+    {
+      throw new Exception('The matrix dimensions must match.');
+    }
+    return new Matrix(this.m, this.n, (int i, int j) => this[[i,j]] - m[[i,j]]);
   }
 }

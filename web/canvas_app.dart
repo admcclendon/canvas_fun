@@ -16,12 +16,89 @@ void main() {
   mgr.Begin();
 }
 
+class KeyboardManager
+{
+  int keyCode;
+  bool Up = false;
+  bool Down = false;
+  bool Left = false;
+  bool Right = false;
+  bool Forward = false;
+  bool Backward = false;
+  
+  KeyboardManager()
+  {
+    window.onKeyDown.listen(this.onKeyDown);
+    window.onKeyUp.listen(this.onKeyUp);
+  }
+  
+  void onKeyDown(KeyboardEvent e)
+  {
+    this.keyCode = e.keyCode;
+    if (e.keyCode == 87)
+    {
+      Up = true;
+    }
+    else if (e.keyCode == 83)
+    {
+      Down = true;
+    }
+    else if (e.keyCode == 65)
+    {
+      Left = true;
+    }
+    else if (e.keyCode == 68)
+    {
+      Right = true;
+    }
+    else if (e.keyCode == 82)
+    {
+      Forward = true;
+    }
+    else if (e.keyCode == 70)
+    {
+      Backward = true;
+    }
+  }
+  
+  void onKeyUp(KeyboardEvent e)
+  {
+    this.keyCode = 0;
+    if (e.keyCode == 87)
+    {
+      Up = false;
+    }
+    else if (e.keyCode == 83)
+    {
+      Down = false;
+    }
+    else if (e.keyCode == 65)
+    {
+      Left = false;
+    }
+    else if (e.keyCode == 68)
+    {
+      Right = false;
+    }
+    else if (e.keyCode == 82)
+    {
+      Forward = false;
+    }
+    else if (e.keyCode == 70)
+    {
+      Backward = false;
+    }
+  }
+}
+
 class CanvasManager
 {
   CanvasElement el;
   CanvasRenderingContext2D context;
   List<Cube> cubes;
   num last_time;
+  KeyboardManager keyMgr;
+  Point3D camera = new Point3D(0, 0, 0);
   
   CanvasManager(this.el)
   {
@@ -31,6 +108,7 @@ class CanvasManager
     
     this.context = this.el.getContext("2d");
     this.cubes = new List<Cube>();
+    this.keyMgr = new KeyboardManager();
   }
   
   void WindowResize(Event e)
@@ -67,7 +145,7 @@ class CanvasManager
   {
     num t = new DateTime.now().millisecondsSinceEpoch;
         
-    num dt = t - last_time;
+    num dt = (t - last_time)/1000;
     last_time = t;
     
     num ts = t/1000; // convert time to seconds
@@ -80,6 +158,31 @@ class CanvasManager
 //    Matrix toScreen = new Matrix.I(4);
 //    toScreen[[3, 3]] = 0;
 //    toScreen[[3, 2]] = 2.414213;
+    if (keyMgr.Up)
+    {
+      camera = new Point3D.fromMatrix(camera + new Point3D(0, dt, 0));
+    }
+    if (keyMgr.Down)
+    {
+      camera = new Point3D.fromMatrix(camera + new Point3D(0, -dt, 0));
+    }
+    if (keyMgr.Left)
+    {
+      camera = new Point3D.fromMatrix(camera + new Point3D(-dt, 0, 0));
+    }
+    if (keyMgr.Right)
+    {
+      camera = new Point3D.fromMatrix(camera + new Point3D(dt, 0, 0));
+    }
+    if (keyMgr.Forward)
+    {
+      camera = new Point3D.fromMatrix(camera + new Point3D(0, 0, dt));
+    }
+    if (keyMgr.Backward)
+    {
+      camera = new Point3D.fromMatrix(camera + new Point3D(0, 0, -dt));
+    }
+    Point3D cameraDir = new Point3D(0, 0, 0);
     Point3D e = new Point3D(0, 0, 2.414213); // this is for a field of view of 45 deg
     this.context..fillStyle = "rgb(255, 255, 255)"
           ..fillRect(0, 0, this.el.width, this.el.height);
@@ -90,18 +193,20 @@ class CanvasManager
     num sx = 1;
     num sy = 1;
     num ratio = this.el.width/this.el.height;
-    if (this.el.width > this.el.height)
-    {
-//      sx += (this.el.width - this.el.height) / (2 * this.el.height);
-    }
+  
+    List<Face> facesToDraw = new List<Face>();
     for (int i = 0; i < this.cubes.length; i++)
     {
-      this.cubes[i].Transform((Point3D pt) => PerspectiveTransform(pt, e, ratio));
+      this.cubes[i].Transform((Point3D pt) => PerspectiveTransform(new Point3D.fromMatrix(pt - camera), e, ratio));
       for (int j = 0; j < this.cubes[i].faces.length; j++)
       {
-        List<Point3D> v = this.cubes[i].faces[j].verts;
-        if ((v[2].x - v[0].x)*(v[1].y - v[0].y) < (v[2].y - v[0].y)*(v[1].x - v[0].x))
+        // Make sure the face is looking at the camera
+        if (this.cubes[i].faces[j].normal.z < 0)
           continue;
+        if (this.cubes[i].faces[j].behind)
+          continue;
+        facesToDraw.add(this.cubes[i].faces[j]);
+        List<Point3D> v = this.cubes[i].faces[j].verts;
         this.context.beginPath();
         this.context.fillStyle = this.cubes[i].faces[j].color;
         for (int k = 0; k < this.cubes[i].faces[j].verts.length + 1; k++)
@@ -122,6 +227,8 @@ class CanvasManager
         this.context.closePath();
       }
     }
+    this.context.fillStyle = "rgb(255,0,0)";
+    this.context.fillText(this.keyMgr.keyCode.toString(), 100, 100);
     window.requestAnimationFrame(Step);
   }
 }
@@ -169,12 +276,6 @@ class Cube
     this.faces[9] = new Face([this.trans_verts[4], this.trans_verts[0], this.trans_verts[3]], "rgb(0, 255, 0)");
     this.faces[10] = new Face([this.trans_verts[3], this.trans_verts[6], this.trans_verts[7]], "rgb(0, 0, 255)");
     this.faces[11] = new Face([this.trans_verts[3], this.trans_verts[2], this.trans_verts[6]], "rgb(0, 0, 255)");
-//    faces[0] = new Face([new Point3D(-1, 1, 1), new Point3D(-1, 1, -1), new Point3D(-1, -1, -1), new Point3D(-1, -1, 1)]); // Left
-//    faces[1] = new Face([new Point3D(-1, 1, -1), new Point3D(1, 1, -1), new Point3D(1, -1, -1), new Point3D(-1, -1, -1)]); // Front
-//    faces[2] = new Face([new Point3D(-1, 1, 1), new Point3D(1, 1, 1), new Point3D(1, 1, -1), new Point3D(-1, 1, -1)]); // Top
-//    faces[3] = new Face([new Point3D(1, 1, -1), new Point3D(1, 1, 1), new Point3D(1, -1, 1), new Point3D(1, -1, -1)]); // Right
-//    faces[4] = new Face([new Point3D(1, 1, 1), new Point3D(-1, 1, 1), new Point3D(-1, -1, 1), new Point3D(1, -1, 1)]); // Back
-//    faces[5] = new Face([new Point3D(1, -1, -1), new Point3D(1, -1, 1), new Point3D(-1, -1, 1), new Point3D(-1, -1, -1)]); // Bottom
     
     this.angles = new Point3D(0, 0, 0);
   }
@@ -209,6 +310,10 @@ class Face
 {
   List<Point3D> verts = new List<Point3D>();
   String color;
+  
+  Point3D get normal => new Point3D.fromMatrix(verts[2] - verts[0]).Cross(new Point3D.fromMatrix(verts[1] - verts[0]));
+  
+  bool get behind => !verts.any((Point3D pt) { return !(pt.z < 1); });
   
   Face([this.verts, this.color]);
   
