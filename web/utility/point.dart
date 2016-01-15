@@ -4,12 +4,12 @@ import "./matrix.dart";
 
 class Point2D extends Matrix
 {
-  num get x => this[[0, 0]];
-  num get y => this[[1, 0]];
-  void set x(num value) { this[[0,0]] = value; }
-  void set y(num value) { this[[1,0]] = value; }
+  double get x => this[[0, 0]];
+  double get y => this[[1, 0]];
+  void set x(double value) { this[[0,0]] = value; }
+  void set y(double value) { this[[1,0]] = value; }
   
-  Point2D([num x = 0, num y = 0]) : super(2, 1)
+  Point2D([double x = 0.0, double y = 0.0]) : super(2, 1)
   {
     this[[0, 0]] = x;
     this[[1, 0]] = y;
@@ -18,14 +18,14 @@ class Point2D extends Matrix
 
 class Point3D extends Matrix
 {
-  num get x => this[[0, 0]];
-  num get y => this[[1, 0]];
-  num get z => this[[2, 0]];
-  void set x(num value) { this[[0,0]] = value; }
-  void set y(num value) { this[[1,0]] = value; }
-  void set z(num value) { this[[2,0]] = value; } 
+  double get x => this[[0, 0]];
+  double get y => this[[1, 0]];
+  double get z => this[[2, 0]];
+  void set x(double value) { this[[0,0]] = value; }
+  void set y(double value) { this[[1,0]] = value; }
+  void set z(double value) { this[[2,0]] = value; } 
   
-  Point3D([num x = 0, num y = 0, num z = 0]) : super(3, 1)
+  Point3D([double x = 0.0, double y = 0.0, double z = 0.0]) : super(3, 1)
   {
     this[[0, 0]] = x;
     this[[1, 0]] = y;
@@ -53,9 +53,9 @@ class Point3D extends Matrix
     this.z = pt.z;
   }
   
-  num Dot(Point3D pt)
+  double Dot(Point3D pt)
   {
-    num result = 0;
+    double result = 0.0;
     for (int i = 0; i < 3; i++)
     {
       result += this[[i, 0]] * pt[[i, 0]];
@@ -76,4 +76,12 @@ class Point3D extends Matrix
   {
     return new Point3D(this.y*pt.z - this.z*pt.y, this.z*pt.x - this.x*pt.z, this.x*pt.y - this.y*pt.x);
   }
+}
+
+Matrix RotationMatrix(Point3D angles)
+{
+  Matrix Rx = new Matrix(3, 3, (int i, int j) => RotationX(i, j, angles.x));
+  Matrix Ry = new Matrix(3, 3, (int i, int j) => RotationY(i, j, angles.y));
+  Matrix Rz = new Matrix(3, 3, (int i, int j) => RotationZ(i, j, angles.z));
+  return Rx*Ry*Rz;
 }

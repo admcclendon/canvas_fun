@@ -12,21 +12,21 @@ A       * B       = C
 Cij = sum k=1:m ( Aik * Bkj )
 
 */
-typedef num MatrixGenerator(int i, int j);
+typedef double MatrixGenerator(int i, int j);
 
-num MatrixMultiplication(int i, int j, Matrix A, Matrix B)
+double MatrixMultiplication(int i, int j, Matrix A, Matrix B)
 {
-  num result = 0;
+  double result = 0.0;
   for (int k = 0; k < A.m; result += A[[i, k]] * B[[k, j]], k++);
   return result;
 }
 
-num MatrixAddition(int i, int j, Matrix A, Matrix B)
+double MatrixAddition(int i, int j, Matrix A, Matrix B)
 {
   return A[[i,j]] + B[[i,j]];
 }
 
-num RotationX(int i, int j, num theta)
+double RotationX(int i, int j, double theta)
 {
   if (i == 1)
   {
@@ -40,7 +40,7 @@ num RotationX(int i, int j, num theta)
     }
     else
     {
-      return 0;
+      return 0.0;
     }
   }
   else if (i == 2)
@@ -55,20 +55,20 @@ num RotationX(int i, int j, num theta)
     }
     else
     {
-      return 0;
+      return 0.0;
     }
   }
   else if (i == j)
   {
-    return 1;
+    return 1.0;
   }
   else
   {
-    return 0;
+    return 0.0;
   }
 }
 
-num RotationY(int i, int j, num theta)
+double RotationY(int i, int j, double theta)
 {
   if (i == 0)
   {
@@ -82,7 +82,7 @@ num RotationY(int i, int j, num theta)
     }
     else
     {
-      return 0;
+      return 0.0;
     }
   }
   else if (i == 2)
@@ -97,20 +97,20 @@ num RotationY(int i, int j, num theta)
     }
     else
     {
-      return 0;
+      return 0.0;
     }
   }
   else if (i == j)
   {
-    return 1;
+    return 1.0;
   }
   else 
   {
-    return 0;
+    return 0.0;
   }
 }
 
-num RotationZ(int i, int j, num theta)
+double RotationZ(int i, int j, double theta)
 {
   if (i == 0)
   {
@@ -124,7 +124,7 @@ num RotationZ(int i, int j, num theta)
     }
     else
     {
-      return 0;
+      return 0.0;
     }
   }
   else if (i == 1)
@@ -139,39 +139,39 @@ num RotationZ(int i, int j, num theta)
     }
     else
     {
-      return 0;
+      return 0.0;
     }
   }
   else if (i == j)
   {
-    return 1;
+    return 1.0;
   }
   else 
   {
-    return 0;
+    return 0.0;
   }
 }
 
-num IdentityMatrix(int i, int j)
+double IdentityMatrix(int i, int j)
 {
   if (i == j)
   {
-    return 1;
+    return 1.0;
   }
   else
   {
-    return 0;
+    return 0.0;
   }
 }
 
 class Matrix
 {
   int m, n;
-  List<num> values;
+  List<double> values;
   
   Matrix(this.m, this.n, [MatrixGenerator g])
   {
-    this.values = new List<num>(this.m * this.n);
+    this.values = new List<double>(this.m * this.n);
     if (g != null)
     {
       for (int i = 0; i < m; i++)
@@ -186,7 +186,7 @@ class Matrix
   
   Matrix.I(int n) : this(n, n, IdentityMatrix);
   
-  operator [](List<num> indicies) 
+  operator [](List<int> indicies) 
   {
     return this.values[indicies[0] + indicies[1]*this.m];
   }
