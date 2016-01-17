@@ -9,7 +9,7 @@ class Ray
   {
     if (pts.length != 2)
     {
-      throw new Exception('A ray cannot have more or less than 2 points.');
+      throw new Exception('A ray must have 2 points.');
     }
     
     /*

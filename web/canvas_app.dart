@@ -3,6 +3,8 @@ import 'dart:math';
 import 'dart:async';
 import './utility/point.dart';
 import 'objects/cube.dart';
+import 'objects/sphere.dart';
+import 'objects/object.dart';
 import 'engine/keyboard_manager.dart';
 import 'engine/graphics/camera.dart';
 import 'engine/graphics/bounding_box.dart';
@@ -12,8 +14,6 @@ import 'engine/graphics/face.dart';
 void main() {
   CanvasElement el = querySelector("#my_canvas");
   
-//  PhysicsManager mgr = new PhysicsManager(el);
-//  mgr.Begin();
   CanvasManager mgr = new CanvasManager(el);
   mgr.Begin();
 }
@@ -22,7 +22,7 @@ class CanvasManager
 {
   CanvasElement el;
   CanvasRenderingContext2D context;
-  List<Cube> cubes;
+  List<Object3D> cubes;
   num last_time;
   KeyboardManager keyMgr;
   Camera camera = new Camera();
@@ -38,7 +38,7 @@ class CanvasManager
     this.el.onClick.listen((e) => el.requestPointerLock());
 //    this.el.onMouseMove.listen((MouseEvent e) { this.camera.orientation.x += e.movement.y*0.001; this.camera.orientation.y += e.movement.x*0.001; });
     this.context = this.el.getContext("2d");
-    this.cubes = new List<Cube>();
+    this.cubes = new List<Object3D>();
     this.keyMgr = new KeyboardManager();
   }
   
@@ -63,6 +63,7 @@ class CanvasManager
     this.cubes.add(new Cube(new Point3D(0.0, -3.0, 15.0), 2.0));
     this.cubes.add(new Cube(new Point3D(3.0, 0.0, 10.0)));
     this.cubes.add(new Cube(new Point3D(-3.0, 0.0, 10.0)));
+    this.cubes.add(new Sphere(1, 30, 30, new Point3D(0.0, 0.0, 10.0)));
     this.el.requestPointerLock();
     this.last_time = new DateTime.now().millisecondsSinceEpoch;
     RequestRedraw();
@@ -87,6 +88,9 @@ class CanvasManager
     this.cubes[1].position.y = 2*cos(2*PI*.1*ts);
     this.cubes[1].orientation.y = (5*PI/180)*ts % 2*PI;
     this.cubes[2].orientation.z = (5*PI/180)*ts % 2*PI;
+    this.cubes[3].orientation.x = (5*PI/180)*ts % 2*PI;
+//    this.cubes[3].orientation.y = (5*PI/180)*ts % 2*PI;
+//    this.cubes[3].orientation.z = (7*PI/180)*ts % 2*PI;
 
     Point3D positionChange = new Point3D();
     if (keyMgr.IsCommandPressed(Commands.MoveUp))
@@ -151,17 +155,12 @@ class CanvasManager
     }
     for (int i = 0; i < this.cubes.length; i++)
     {
-      /*
-       * Draw the bounding box of each cube. This is for debugging purposes only.
-       * 
-       * TODO: remove the section of code.
-       */
-      DrawBoundingBox(this.cubes[i].bounds);
+      DrawObject(this.cubes[i]);
       
-      for (int j = 0; j < this.cubes[i].faces.length; j++)
-      {
-        DrawFace(this.cubes[i].faces[j]);
-      }
+//      for (int j = 0; j < this.cubes[i].faces.length; j++)
+//      {
+//        DrawFace(this.cubes[i].faces[j]);
+//      }
     }
     
     /*
@@ -173,6 +172,10 @@ class CanvasManager
     this.context.stroke();
     this.context.closePath();
     
+    
+    /*
+     * Debugging output.
+     */
     this.context.fillStyle = "rgb(0,0,0)";
     this.context.fillText("Orientation - X: " + this.camera.orientation.x.toString() + ", Y: " + this.camera.orientation.y.toString(), 100, 100);
     this.context.fillText("Position - X: " + this.camera.position.x.toString() + ", Y: " + this.camera.position.y.toString() + ", Z: " + this.camera.position.z.toString(), 100, 120);
@@ -202,11 +205,34 @@ class CanvasManager
     this.context.lineTo((pt.x + sx)*el.width/2, (sy - pt.y)*el.height/2);
   }
   
-  void DrawCube(Cube cube)
+  void DrawObject(Object3D obj)
   {
-    for (int j = 0; j < cube.faces.length; j++)
+    /*
+     * Draw the bounding box of each cube. This is for debugging purposes only.
+     * 
+     * TODO: remove the section of code.
+     */
+    bool intersect = false;
+    for (int i = 0; i < this.cubes.length; i++)
     {
-      DrawFace(cube.faces[j]);
+      if (this.cubes[i] == obj)
+      {
+        continue;
+      }
+      else
+      {
+        if (this.cubes[i].bounds.Intersects(obj.bounds))
+        {
+          intersect = true;
+          break;
+        }
+      }
+    }
+    DrawBoundingBox(obj.bounds, intersect ? "rgb(255, 0, 0)" : "rgb(0, 0, 0)");
+    
+    for (int j = 0; j < obj.faces.length; j++)
+    {
+      DrawFace(obj.faces[j]);
     }
   }
   
@@ -221,7 +247,7 @@ class CanvasManager
      
      this.context.beginPath();
      this.context.fillStyle = face.color;
-     this.context.strokeStyle = face.color;
+     this.context.strokeStyle = "rgb(0, 0, 0)";
      List<Ray> r = face.rays;
      
      MoveCursor(r[0].points[0]);
@@ -234,10 +260,10 @@ class CanvasManager
      this.context.closePath();
   }
   
-  void DrawBoundingBox(BoundingBox box)
+  void DrawBoundingBox(BoundingBox box, String color)
   {
     this.context.beginPath();
-    this.context.strokeStyle = "rgb(0, 0, 0)";
+    this.context.strokeStyle = color;
 
     MoveCursor(box.min);
     DrawLine(new Point3D(box.min.x, box.max.y));

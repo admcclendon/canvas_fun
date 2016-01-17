@@ -11,7 +11,7 @@ class Face
   List<Point3D> verts = new List<Point3D>();
   String color;
   
-  Face([this.verts, this.color]);
+  Face([this.verts, this.color = "rgb(255,255,255)"]);
   
   Point3D get normal => new Point3D.fromMatrix(verts[2] - verts[0]).Cross(new Point3D.fromMatrix(verts[1] - verts[0]));
     
