@@ -23,37 +23,14 @@ class Sphere extends Object3D
    */
   Sphere(this.radius, int thetaSteps, int phiSteps, Point3D position) : super((phiSteps - 2)*thetaSteps + 2, 2*thetaSteps*(phiSteps - 2), position)
   {
-    /*
-     * Create all of the verticies for the sphere.
-     */
-    for (int i = 0; i < phiSteps; i++)
-    {
-      for (int j = 0; j < thetaSteps; j++)
-      {
-        num phi = PI * i / (phiSteps - 1);
-        num theta = 2 * PI * j / thetaSteps;
-        if (i == 0 || i == phiSteps - 1)
-        {
-          this.verts[(i == 0) ? 0 : (phiSteps - 2)*thetaSteps + 1] = new Point3D(0.0, 0.0, radius*cos(phi));
-        }
-        else
-        {
-          this.verts[(i - 1)*thetaSteps + j + 1] = new Point3D(radius*cos(theta)*sin(phi), radius*sin(theta)*sin(phi), radius*cos(phi));
-        }
-      }
-    }
-    
-    /*
-     * Create the transformable verticies.
-     */
-    for (int i = 0; i < this.verts.length; i++)
-    {
-      this.trans_verts[i] = new Point3D.fromPoint(this.verts[i]);
-    }
-    
-    /*
-     * Create the face definitions.
-     */
+    createAllOfTheVerticies(phiSteps, thetaSteps);
+
+    createTheTransformableVerticies();
+
+    createTheFaceDefinitions(phiSteps, thetaSteps);
+  }
+
+  void createTheFaceDefinitions(int phiSteps, int thetaSteps) {
     for (int i = 0; i < phiSteps - 1; i++)
     {
       for (int j = 0; j < thetaSteps; j++)
@@ -70,6 +47,32 @@ class Sphere extends Object3D
         {
           this.faces[(2*i - 1)*thetaSteps + j*2]      = new Face([this.trans_verts[(i-1)*thetaSteps+j+1], this.trans_verts[i*thetaSteps+j+1], this.trans_verts[(i-1)*thetaSteps+1+(j+1)%thetaSteps]], "rgb(0, 0, 255)");
           this.faces[(2*i - 1)*thetaSteps + j*2 + 1]  = new Face([this.trans_verts[(i-1)*thetaSteps+1+(j+1)%thetaSteps], this.trans_verts[i*thetaSteps+j+1], this.trans_verts[i*thetaSteps+1+(j+1)%thetaSteps]], "rgb(0, 0, 255");
+        }
+      }
+    }
+  }
+
+  void createTheTransformableVerticies() {
+    for (int i = 0; i < this.verts.length; i++)
+    {
+      this.trans_verts[i] = new Point3D.fromPoint(this.verts[i]);
+    }
+  }
+
+  void createAllOfTheVerticies(int phiSteps, int thetaSteps) {
+    for (int i = 0; i < phiSteps; i++)
+    {
+      for (int j = 0; j < thetaSteps; j++)
+      {
+        num phi = PI * i / (phiSteps - 1);
+        num theta = 2 * PI * j / thetaSteps;
+        if (i == 0 || i == phiSteps - 1)
+        {
+          this.verts[(i == 0) ? 0 : (phiSteps - 2)*thetaSteps + 1] = new Point3D(0.0, 0.0, radius*cos(phi));
+        }
+        else
+        {
+          this.verts[(i - 1)*thetaSteps + j + 1] = new Point3D(radius*cos(theta)*sin(phi), radius*sin(theta)*sin(phi), radius*cos(phi));
         }
       }
     }
