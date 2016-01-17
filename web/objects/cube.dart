@@ -1,10 +1,8 @@
 library objects.cube;
 
 import '../utility/point.dart';
-import '../utility/matrix.dart';
 import 'object.dart';
 import '../engine/graphics/face.dart';
-import '../engine/graphics/bounding_box.dart';
 
 class Cube extends Object3D
 {
