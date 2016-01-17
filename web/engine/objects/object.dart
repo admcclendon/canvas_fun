@@ -3,8 +3,8 @@ library objects.object;
 import '../utility/vector.dart';
 import '../utility/point.dart';
 import '../utility/matrix.dart';
-import '../engine/graphics/face.dart';
-import '../engine/graphics/bounding_box.dart';
+import '../graphics/face.dart';
+import '../graphics/bounding_box.dart';
 
 abstract class PhysicsObject 
 {

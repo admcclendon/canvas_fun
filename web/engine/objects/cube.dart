@@ -2,7 +2,7 @@ library objects.cube;
 
 import '../utility/point.dart';
 import 'object.dart';
-import '../engine/graphics/face.dart';
+import '../graphics/face.dart';
 
 class Cube extends Object3D
 {

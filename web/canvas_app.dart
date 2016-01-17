@@ -1,10 +1,10 @@
 import 'dart:html';
 import 'dart:math';
 import 'dart:async';
-import './utility/point.dart';
-import 'objects/cube.dart';
-import 'objects/sphere.dart';
-import 'objects/object.dart';
+import 'engine/utility/point.dart';
+import 'engine/objects/cube.dart';
+import 'engine/objects/sphere.dart';
+import 'engine/objects/object.dart';
 import 'engine/keyboard_manager.dart';
 import 'engine/graphics/camera.dart';
 import 'engine/graphics/bounding_box.dart';
@@ -63,7 +63,7 @@ class CanvasManager
     this.cubes.add(new Cube(new Point3D(0.0, -3.0, 15.0), 2.0));
     this.cubes.add(new Cube(new Point3D(3.0, 0.0, 10.0)));
     this.cubes.add(new Cube(new Point3D(-3.0, 0.0, 10.0)));
-    this.cubes.add(new Sphere(1, 30, 30, new Point3D(0.0, 0.0, 10.0)));
+    this.cubes.add(new Sphere(1, 20, 11, new Point3D(0.0, 0.0, 10.0)));
     this.el.requestPointerLock();
     this.last_time = new DateTime.now().millisecondsSinceEpoch;
     RequestRedraw();
@@ -156,11 +156,6 @@ class CanvasManager
     for (int i = 0; i < this.cubes.length; i++)
     {
       DrawObject(this.cubes[i]);
-      
-//      for (int j = 0; j < this.cubes[i].faces.length; j++)
-//      {
-//        DrawFace(this.cubes[i].faces[j]);
-//      }
     }
     
     /*
@@ -171,7 +166,6 @@ class CanvasManager
     this.context.arc(el.width/2, el.height/2, 15, 0, 2*PI);
     this.context.stroke();
     this.context.closePath();
-    
     
     /*
      * Debugging output.

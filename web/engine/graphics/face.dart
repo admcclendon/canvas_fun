@@ -1,6 +1,6 @@
 library engine.graphics.face;
 
-import '../../utility/point.dart';
+import '../utility/point.dart';
 import 'bounding_box.dart';
 import 'ray.dart';
 

@@ -1,7 +1,7 @@
 library engine.graphics.camera;
 
-import '../../utility/matrix.dart';
-import '../../utility/point.dart';
+import '../utility/matrix.dart';
+import '../utility/point.dart';
 
 class Camera
 {

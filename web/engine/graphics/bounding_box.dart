@@ -1,6 +1,6 @@
 library engine.graphics.bounding_box;
 
-import '../../utility/point.dart';
+import '../utility/point.dart';
 
 class BoundingBox
 {

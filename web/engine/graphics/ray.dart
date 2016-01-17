@@ -1,4 +1,4 @@
-import '../../utility/point.dart';
+import '../utility/point.dart';
 import 'face.dart';
 
 class Ray
