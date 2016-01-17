@@ -1,3 +1,5 @@
+library objects.object;
+
 import '../utility/vector.dart';
 import '../utility/point.dart';
 import '../utility/matrix.dart';
