@@ -13,7 +13,7 @@ class Face
   
   Face([this.verts, this.color = "rgb(255,255,255)"]);
   
-  Point3D get normal => new Point3D.fromMatrix(verts[2] - verts[0]).Cross(new Point3D.fromMatrix(verts[1] - verts[0]));
+  Point3D get normal => (verts[2] - verts[0]).Cross(verts[1] - verts[0]);
     
   bool get behind => !verts.any((Point3D pt) { return !(pt.z < 3); });
   

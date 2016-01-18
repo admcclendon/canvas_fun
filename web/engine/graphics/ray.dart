@@ -21,7 +21,7 @@ class Ray
   
   bool Intersect(Face face)
   {
-    Point3D r = new Point3D.fromMatrix(points[1] - points[0]);
+    Point3D r = points[1] - points[0];
     Point3D n = face.normal;
     
     num NdotR = n.Dot(r);
@@ -31,7 +31,7 @@ class Ray
       return false;
     }
     
-    num r1 = n.Dot(new Point3D.fromMatrix(face.verts[0] - points[0]))/NdotR;
+    num r1 = n.Dot(face.verts[0] - points[0])/NdotR;
     if (r1 >= 0 && r1 <= 1)
     {
       return true;
