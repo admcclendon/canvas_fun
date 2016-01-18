@@ -204,13 +204,18 @@ class Matrix
     return new Matrix(this.m, m.n, (int i, int j) => MatrixMultiplication(i, j, this, m));
   }
   
-  operator +(Matrix m)
+  Matrix Add(Matrix m)
   {
     if (this.m != m.m || this.n != m.n)
     {
       throw new Exception('The matrix dimensions must match.');
     }
     return new Matrix(this.m, this.n, (int i, int j) => MatrixAddition(i, j, this, m));
+  }
+  
+  operator +(Matrix m)
+  {
+    return this.Add(m);
   }
   
   operator -(Matrix m)

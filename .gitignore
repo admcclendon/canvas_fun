@@ -19,6 +19,7 @@ $RECYCLE.BIN/
 
 # Dart package includes
 packages/
+.pub/
 
 # Ignore any built files
 build/

@@ -2,4 +2,5 @@ name: canvas_app
 description: A sample web application
 dependencies:
   browser: any
+  test: any
   unittest: any

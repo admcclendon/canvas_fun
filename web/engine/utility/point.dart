@@ -1,6 +1,6 @@
 library utility.point;
 
-import "./matrix.dart";
+import "matrix.dart";
 
 class Point2D extends Matrix
 {
@@ -75,6 +75,16 @@ class Point3D extends Matrix
   Point3D Cross(Point3D pt)
   {
     return new Point3D(this.y*pt.z - this.z*pt.y, this.z*pt.x - this.x*pt.z, this.x*pt.y - this.y*pt.x);
+  }
+  
+  operator +(Point3D pt)
+  {
+    return new Point3D.fromMatrix(this.Add(pt));
+  }
+  
+  operator ==(Point3D pt)
+  {
+    return this.x == pt.x && this.y == pt.y && this.z == pt.z;
   }
 }
 
