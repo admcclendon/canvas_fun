@@ -64,8 +64,8 @@ class KeyboardManager
     commandMap[Commands.YawDown] = Keys.A;
     commandMap[Commands.PitchUp] = Keys.W;
     commandMap[Commands.PitchDown] = Keys.S;
-    commandMap[Commands.RollUp] = Keys.Q;
-    commandMap[Commands.RollDown] = Keys.E;
+    commandMap[Commands.RollUp] = Keys.E;
+    commandMap[Commands.RollDown] = Keys.Q;
     commandMap[Commands.MoveForward] = Keys.UpArrow;
     commandMap[Commands.MoveBackward] = Keys.DownArrow;
     commandMap[Commands.MoveLeft] = Keys.LeftArrow;

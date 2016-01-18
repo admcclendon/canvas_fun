@@ -120,11 +120,3 @@ class Point3D extends Matrix
     return "(" + this.x.toString() + ", " + this.y.toString() + ", " + this.z.toString() + ")";
   }
 }
-
-Matrix RotationMatrix(Point3D angles)
-{
-  Matrix Rx = new Matrix(3, 3, (int i, int j) => RotationX(i, j, angles.x));
-  Matrix Ry = new Matrix(3, 3, (int i, int j) => RotationY(i, j, angles.y));
-  Matrix Rz = new Matrix(3, 3, (int i, int j) => RotationZ(i, j, angles.z));
-  return Rx*Ry*Rz;
-}

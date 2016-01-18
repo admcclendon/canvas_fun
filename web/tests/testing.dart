@@ -45,7 +45,7 @@ void main()
       
       Point3D result = x * A;
       
-      Point3D expected = new Point3D(1.0, 3.0, -2.0);
+      Point3D expected = new Point3D(1.0, -3.0, 2.0);
       
       double eps = pow(2, -52);
       Point3D err = new Point3D(eps, eps, eps);
@@ -59,7 +59,7 @@ void main()
       
       Point3D result = x * A;
       
-      Point3D expected = new Point3D(-3.0, 2.0, 1.0);
+      Point3D expected = new Point3D(3.0, 2.0, -1.0);
       
       double eps = pow(2, -52);
       Point3D err = new Point3D(eps, eps, eps);
@@ -73,7 +73,7 @@ void main()
       
       Point3D result = x * A;
       
-      Point3D expected = new Point3D(2.0, -1.0, 3.0);
+      Point3D expected = new Point3D(-2.0, 1.0, 3.0);
       
       double eps = pow(2, -52);
       Point3D err = new Point3D(eps, eps, eps);

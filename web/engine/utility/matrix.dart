@@ -26,130 +26,25 @@ double MatrixAddition(int i, int j, Matrix A, Matrix B)
   return A[[i,j]] + B[[i,j]];
 }
 
-double RotationX(int i, int j, double theta)
+List<double> RotationMatrixX(double theta)
 {
-  if (i == 1)
-  {
-    if (j == 1)
-    {
-      return cos(-theta);
-    }
-    else if (j == 2)
-    {
-      return -sin(-theta);
-    }
-    else
-    {
-      return 0.0;
-    }
-  }
-  else if (i == 2)
-  {
-    if (j == 1)
-    {
-      return sin(-theta);
-    }
-    else if (j == 2)
-    {
-      return cos(-theta);
-    }
-    else
-    {
-      return 0.0;
-    }
-  }
-  else if (i == j)
-  {
-    return 1.0;
-  }
-  else
-  {
-    return 0.0;
-  }
+  return [1.0, 0.0, 0.0,
+        0.0, cos(theta), -sin(theta),
+        0.0, sin(theta), cos(theta)];
 }
 
-double RotationY(int i, int j, double theta)
+List<double> RotationMatrixY(double theta)
 {
-  if (i == 0)
-  {
-    if (j == 0)
-    {
-      return cos(-theta);
-    }
-    else if (j == 2)
-    {
-      return sin(-theta);
-    }
-    else
-    {
-      return 0.0;
-    }
-  }
-  else if (i == 2)
-  {
-    if (j == 0)
-    {
-      return -sin(-theta);
-    }
-    else if (j == 2)
-    {
-      return cos(-theta);
-    }
-    else
-    {
-      return 0.0;
-    }
-  }
-  else if (i == j)
-  {
-    return 1.0;
-  }
-  else 
-  {
-    return 0.0;
-  }
+  return [cos(theta), 0.0, sin(theta),
+        0.0, 1.0, 0.0,
+        -sin(theta), 0.0, cos(theta)];
 }
 
-double RotationZ(int i, int j, double theta)
+List<double> RotationMatrixZ(double theta)
 {
-  if (i == 0)
-  {
-    if (j == 0)
-    {
-      return cos(-theta);
-    }
-    else if (j == 1)
-    {
-      return -sin(-theta);
-    }
-    else
-    {
-      return 0.0;
-    }
-  }
-  else if (i == 1)
-  {
-    if (j == 0)
-    {
-      return sin(-theta);
-    }
-    else if (j == 1)
-    {
-      return cos(-theta);
-    }
-    else
-    {
-      return 0.0;
-    }
-  }
-  else if (i == j)
-  {
-    return 1.0;
-  }
-  else 
-  {
-    return 0.0;
-  }
+  return [cos(theta), -sin(theta), 0.0,
+          sin(theta), cos(theta), 0.0,
+          0.0, 0.0, 1.0];
 }
 
 double IdentityMatrix(int i, int j)
@@ -188,9 +83,18 @@ class Matrix
   
   Matrix.Scalar(num a) : this(1, 1, (int i, int j) => a);
   
-  Matrix.RotateX(double theta) : this(3, 3, (int i, int j) => RotationX(i, j, theta));
-  Matrix.RotateY(double theta) : this(3, 3, (int i, int j) => RotationY(i, j, theta));
-  Matrix.RotateZ(double theta) : this(3, 3, (int i, int j) => RotationZ(i, j, theta));
+  Matrix.RotateX(double theta) : this.fromList(3, 3, RotationMatrixX(theta));
+  Matrix.RotateY(double theta) : this.fromList(3, 3, RotationMatrixY(theta));
+  Matrix.RotateZ(double theta) : this.fromList(3, 3, RotationMatrixZ(theta));
+  
+  Matrix.fromList(this.m, this.n, List<double> values)
+  {
+    if (values.length != this.m * this.n)
+    {
+      throw new Exception("There must be the correct number of values");
+    }
+    this.values = values;
+  }
   
   Matrix Abs()
   {

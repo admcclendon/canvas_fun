@@ -18,18 +18,10 @@ class Camera
   
   Matrix RotationMatrix()
   {
-    Matrix Rx = new Matrix(3, 3, (int i, int j) => RotationX(i, j, orientation.x));
-    Matrix Ry = new Matrix(3, 3, (int i, int j) => RotationY(i, j, orientation.y));
-    Matrix Rz = new Matrix(3, 3, (int i, int j) => RotationZ(i, j, orientation.z));
+    Matrix Rx = new Matrix.RotateX(-orientation.x);
+    Matrix Ry = new Matrix.RotateY(-orientation.y);
+    Matrix Rz = new Matrix.RotateZ(-orientation.z);
     return Rz*Rx*Ry;
-  }
-  
-  Point3D CameraToWorld(Point3D pt)
-  {
-    Matrix Rx = new Matrix(3, 3, (int i, int j) => RotationX(i, j, orientation.x));
-    Matrix Ry = new Matrix(3, 3, (int i, int j) => RotationY(i, j, orientation.y));
-    Matrix Rz = new Matrix(3, 3, (int i, int j) => RotationZ(i, j, orientation.z));
-    return new Point3D.fromMatrix(Rz*Rx*Ry*pt);
   }
   
   Point3D Transform(Point3D pt, num ratio)

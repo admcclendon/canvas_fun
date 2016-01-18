@@ -91,11 +91,11 @@ class CanvasManager
     Point3D positionChange = new Point3D();
     if (keyMgr.IsCommandPressed(Commands.MoveUp))
     {
-      positionChange += new Point3D(0.0, dt, 0.0);
+      positionChange += new Point3D(0.0, -dt, 0.0);
     }
     if (keyMgr.IsCommandPressed(Commands.MoveDown))
     {
-      positionChange += new Point3D(0.0, -dt, 0.0);
+      positionChange += new Point3D(0.0, dt, 0.0);
     }
     if (keyMgr.IsCommandPressed(Commands.MoveLeft))
     {
@@ -187,12 +187,12 @@ class CanvasManager
   
   void MoveCursor(Point3D pt)
   {
-    this.context.moveTo((pt.x + sx)*el.width/2, (sy - pt.y)*el.height/2);
+    this.context.moveTo((pt.x + sx)*el.width/2, (pt.y + sy)*el.height/2);
   }
   
   void DrawLine(Point3D pt)
   {
-    this.context.lineTo((pt.x + sx)*el.width/2, (sy - pt.y)*el.height/2);
+    this.context.lineTo((pt.x + sx)*el.width/2, (pt.y + sy)*el.height/2);
   }
   
   void DrawObject(Object3D obj)

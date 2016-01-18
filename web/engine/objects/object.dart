@@ -62,9 +62,9 @@ abstract class Object3D
   
   Matrix RotationMatrix()
   {
-    Matrix Rx = new Matrix(3, 3, (int i, int j) => RotationX(i, j, this.orientation.x));
-    Matrix Ry = new Matrix(3, 3, (int i, int j) => RotationY(i, j, this.orientation.y));
-    Matrix Rz = new Matrix(3, 3, (int i, int j) => RotationZ(i, j, this.orientation.z));
+    Matrix Rx = new Matrix.RotateX(this.orientation.x);
+    Matrix Ry = new Matrix.RotateY(this.orientation.y);
+    Matrix Rz = new Matrix.RotateZ(this.orientation.z);
     return Ry*Rx*Rz;
   }
   
