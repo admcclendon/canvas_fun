@@ -16,7 +16,23 @@ class Camera
     this.orientation = new Point3D();
   }
   
+  void Look(double thetaX, double thetaY)
+  {
+    Point3D change = new Point3D(thetaX, thetaY, 0.0);
+    
+    Matrix Rz = new Matrix.RotateZ(orientation.z);
+    this.orientation += change*Rz;
+  }
+  
   Matrix RotationMatrix()
+  {
+    Matrix Rx = new Matrix.RotateX(orientation.x);
+    Matrix Ry = new Matrix.RotateY(orientation.y);
+    Matrix Rz = new Matrix.RotateZ(orientation.z);
+    return Ry*Rx*Rz;
+  }
+  
+  Matrix WorldToCamera()
   {
     Matrix Rx = new Matrix.RotateX(-orientation.x);
     Matrix Ry = new Matrix.RotateY(-orientation.y);
@@ -26,7 +42,7 @@ class Camera
   
   Point3D Transform(Point3D pt, num ratio)
   {
-    Point3D relativeCamera = (pt - this.position)*this.RotationMatrix();
+    Point3D relativeCamera = (pt - this.position)*this.WorldToCamera();
     return new Point3D(relativeCamera.x*this.e.z/relativeCamera.z/ratio, relativeCamera.y*this.e.z/relativeCamera.z, relativeCamera.z);
   }
 }

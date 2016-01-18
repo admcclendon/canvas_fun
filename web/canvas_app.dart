@@ -36,7 +36,7 @@ class CanvasManager
     window.onResize.listen(WindowResize);
     
     this.el.onClick.listen((e) => el.requestPointerLock());
-//    this.el.onMouseMove.listen((MouseEvent e) { this.camera.orientation.x += e.movement.y*0.001; this.camera.orientation.y += e.movement.x*0.001; });
+    this.el.onMouseMove.listen(this.MouseMove);
     this.context = this.el.getContext("2d");
     this.cubes = new List<Object3D>();
     this.keyMgr = new KeyboardManager();
@@ -57,10 +57,15 @@ class CanvasManager
     scheduleMicrotask(Start);
   }
   
+  void MouseMove(MouseEvent e)
+  {
+    this.camera.Look(-e.movement.y*0.0001, e.movement.x*0.0001);
+  }
+  
   void Start()
   {
     // Initialize objects in the scene..
-    this.cubes.add(new Cube(new Point3D(0.0, -3.0, 15.0), 2.0));
+    this.cubes.add(new Cube(new Point3D(0.0, 3.0, 15.0), 2.0));
     this.cubes.add(new Cube(new Point3D(3.0, 0.0, 10.0)));
     this.cubes.add(new Cube(new Point3D(-3.0, 0.0, 10.0)));
     this.cubes.add(new Sphere(1, 20, 11, new Point3D(0.0, 0.0, 10.0)));
@@ -113,7 +118,7 @@ class CanvasManager
     {
       positionChange += new Point3D(0.0, 0.0, -dt);
     }
-    this.camera.position += positionChange;
+    this.camera.position += positionChange*this.camera.RotationMatrix();
 
     if (keyMgr.IsCommandPressed(Commands.YawUp))
     {

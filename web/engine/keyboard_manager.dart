@@ -21,7 +21,7 @@ enum Commands
 enum Keys
 {
   W, A, S, D, Q, E, Z, X,
-  Ctrl, Space,
+  Ctrl, Space, Shift,
   UpArrow, LeftArrow, DownArrow, RightArrow, 
   NumPad1, NumPad2, NumPad3, NumPad4, NumPad5, NumPad6   
 }
@@ -57,19 +57,20 @@ class KeyboardManager
     keyMap[32] = Keys.Space;
     keyMap[90] = Keys.Z;
     keyMap[88] = Keys.X;
+    keyMap[16] = Keys.Shift;
     
-    commandMap[Commands.MoveUp] = Keys.Z;
-    commandMap[Commands.MoveDown] = Keys.X;
-    commandMap[Commands.YawUp] = Keys.D;
-    commandMap[Commands.YawDown] = Keys.A;
-    commandMap[Commands.PitchUp] = Keys.W;
-    commandMap[Commands.PitchDown] = Keys.S;
+    commandMap[Commands.MoveUp] = Keys.Space;
+    commandMap[Commands.MoveDown] = Keys.Shift;
+//    commandMap[Commands.YawUp] = Keys.D;
+//    commandMap[Commands.YawDown] = Keys.A;
+//    commandMap[Commands.PitchUp] = Keys.W;
+//    commandMap[Commands.PitchDown] = Keys.S;
     commandMap[Commands.RollUp] = Keys.E;
     commandMap[Commands.RollDown] = Keys.Q;
-    commandMap[Commands.MoveForward] = Keys.UpArrow;
-    commandMap[Commands.MoveBackward] = Keys.DownArrow;
-    commandMap[Commands.MoveLeft] = Keys.LeftArrow;
-    commandMap[Commands.MoveRight] = Keys.RightArrow;
+    commandMap[Commands.MoveForward] = Keys.W;
+    commandMap[Commands.MoveBackward] = Keys.S;
+    commandMap[Commands.MoveLeft] = Keys.A;
+    commandMap[Commands.MoveRight] = Keys.D;
     
     // Make the default state false
     List<Keys> keys = Keys.values;
