@@ -17,7 +17,7 @@ typedef double MatrixGenerator(int i, int j);
 double MatrixMultiplication(int i, int j, Matrix A, Matrix B)
 {
   double result = 0.0;
-  for (int k = 0; k < A.m; result += A[[i, k]] * B[[k, j]], k++);
+  for (int k = 0; k < A.n; result += A[[i, k]] * B[[k, j]], k++);
   return result;
 }
 
@@ -186,6 +186,8 @@ class Matrix
   
   Matrix.I(int n) : this(n, n, IdentityMatrix);
   
+  Matrix.Scalar(num a) : this(1, 1, (int i, int j) => a);
+  
   operator [](List<int> indicies) 
   {
     return this.values[indicies[0] + indicies[1]*this.m];
@@ -195,13 +197,18 @@ class Matrix
     this.values[indicies[0] + indicies[1]*this.m] = value;
   }
   
-  operator *(Matrix m)
+  Matrix Multiply(Matrix m)
   {
     if (this.n != m.m)
     {
       throw new Exception('The inner dimensions of the matricies must match.');
     }
     return new Matrix(this.m, m.n, (int i, int j) => MatrixMultiplication(i, j, this, m));
+  }
+  
+  operator *(Matrix m)
+  {
+    return this.Multiply(m);
   }
   
   Matrix Add(Matrix m)

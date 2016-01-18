@@ -1,5 +1,6 @@
 import "package:test/test.dart";
 
+import "../engine/utility/matrix.dart";
 import "../engine/utility/point.dart";
 
 void main()
@@ -19,6 +20,14 @@ void main()
       
       Point3D z = x - y;
       expect(z, equals(new Point3D(2.0, 3.0, 3.0)));
+    });
+    
+    test("* operator - scalar", () {
+      Point3D x = new Point3D(2.0, 4.0, 3.0);
+      num a = 0.5;
+      
+      Point3D y = x * new Matrix.Scalar(a);
+      expect(y, equals(new Point3D(1.0, 2.0, 1.5)));
     });
   });
 }
