@@ -82,42 +82,38 @@ class CanvasManager
     last_time = t;
     
     num ts = t/1000; // convert time to seconds
-//    this.cubes[0].position.x = 2*cos(2*PI*.2*ts);
-//    this.cubes[0].position.y = 3*sin(2*PI*.1*ts);
-//    this.cubes[0].orientation.x = (5*PI/180)*ts % 2*PI;
+    
     this.cubes[1].position.y = 2*cos(2*PI*.1*ts);
     this.cubes[1].orientation.y = (5*PI/180)*ts % 2*PI;
     this.cubes[2].orientation.z = (5*PI/180)*ts % 2*PI;
     this.cubes[3].orientation.x = (5*PI/180)*ts % 2*PI;
-//    this.cubes[3].orientation.y = (5*PI/180)*ts % 2*PI;
-//    this.cubes[3].orientation.z = (7*PI/180)*ts % 2*PI;
 
     Point3D positionChange = new Point3D();
     if (keyMgr.IsCommandPressed(Commands.MoveUp))
     {
-      positionChange = new Point3D.fromMatrix(positionChange + new Point3D(0.0, dt, 0.0));
+      positionChange += new Point3D(0.0, dt, 0.0);
     }
     if (keyMgr.IsCommandPressed(Commands.MoveDown))
     {
-      positionChange = new Point3D.fromMatrix(positionChange + new Point3D(0.0, -dt, 0.0));
+      positionChange += new Point3D(0.0, -dt, 0.0);
     }
     if (keyMgr.IsCommandPressed(Commands.MoveLeft))
     {
-      positionChange = new Point3D.fromMatrix(positionChange + new Point3D(-dt, 0.0, 0.0));
+      positionChange += new Point3D(-dt, 0.0, 0.0);
     }
     if (keyMgr.IsCommandPressed(Commands.MoveRight))
     {
-      positionChange = new Point3D.fromMatrix(positionChange + new Point3D(dt, 0.0, 0.0));
+      positionChange += new Point3D(dt, 0.0, 0.0);
     }
     if (keyMgr.IsCommandPressed(Commands.MoveForward))
     {
-      positionChange = new Point3D.fromMatrix(positionChange + new Point3D(0.0, 0.0, dt));
+      positionChange += new Point3D(0.0, 0.0, dt);
     }
     if (keyMgr.IsCommandPressed(Commands.MoveBackward))
     {
-      positionChange = new Point3D.fromMatrix(positionChange + new Point3D(0.0, 0.0, -dt));
+      positionChange += new Point3D(0.0, 0.0, -dt);
     }
-    this.camera.position = new Point3D.fromMatrix(positionChange + this.camera.position);
+    this.camera.position += positionChange;
 
     if (keyMgr.IsCommandPressed(Commands.YawUp))
     {
