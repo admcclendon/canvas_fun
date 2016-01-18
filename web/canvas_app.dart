@@ -168,25 +168,6 @@ class CanvasManager
     this.context.stroke();
     this.context.closePath();
     
-    /*
-     * Debugging output.
-     */
-    this.context.fillStyle = "rgb(0,0,0)";
-    this.context.fillText("Orientation - X: " + this.camera.orientation.x.toString() + ", Y: " + this.camera.orientation.y.toString(), 100, 100);
-    this.context.fillText("Position - X: " + this.camera.position.x.toString() + ", Y: " + this.camera.position.y.toString() + ", Z: " + this.camera.position.z.toString(), 100, 120);
-    this.context.fillText("Keycode: " + this.keyMgr.keyCode.toString(), 100, 140);
-    
-    for (int i = 0; i < this.cubes[0].trans_verts.length; i++)
-    {
-      Point3D point = this.cubes[0].trans_verts[i];
-      this.context.fillText("Cube[0][" + i.toString() + "] - X: " + point.x.toString() + ", Y: " + point.y.toString() + ", Z: " + point.z.toString(), 100, 160 + i*20);
-    }
-    for (int i = 0; i < this.cubes[0].faces.length; i++)
-    {
-      Face face = this.cubes[0].faces[i];
-      this.context.fillText("Cube[0].Face[" + i.toString() + "] Behind: " + face.behind.toString() + ", Outside: " + face.outside.toString() + ", Normal Z: " + face.normal.z.toString(), 100, 320 + i*20);
-    }
-    
     window.requestAnimationFrame(Step);
   }
   
