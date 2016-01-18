@@ -33,9 +33,9 @@ void main()
     
     test("* operator - Matrix Identity", () {
       Point3D x = new Point3D(1.0, 2.0, 3.0);
-      Matrix a = new Matrix.I(3);
+      Matrix A = new Matrix.I(3);
       
-      Point3D y = x * a;
+      Point3D y = x * A;
       expect(y, equals(new Point3D(1.0, 2.0, 3.0)));
     });
     

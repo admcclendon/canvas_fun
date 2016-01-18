@@ -26,7 +26,7 @@ class Camera
   
   Point3D Transform(Point3D pt, num ratio)
   {
-    Point3D relativeCamera = new Point3D.fromMatrix(this.RotationMatrix()*(pt - this.position));
+    Point3D relativeCamera = (pt - this.position)*this.RotationMatrix();
     return new Point3D(relativeCamera.x*this.e.z/relativeCamera.z/ratio, relativeCamera.y*this.e.z/relativeCamera.z, relativeCamera.z);
   }
 }

@@ -70,7 +70,7 @@ abstract class Object3D
   
   Point3D ToWorld(Point3D pt)
   {
-    return new Point3D.fromMatrix(this.RotationMatrix()*pt) + this.position;
+    return pt * this.RotationMatrix() + this.position;
   }
   
   List<Face> Transform(Transformation trans)
