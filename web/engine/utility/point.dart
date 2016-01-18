@@ -82,6 +82,11 @@ class Point3D extends Matrix
     return new Point3D.fromMatrix(this.Add(pt));
   }
   
+  operator -(Point3D pt)
+  {
+    return new Point3D.fromMatrix(this.Subtract(pt));
+  }
+  
   operator ==(Point3D pt)
   {
     return this.x == pt.x && this.y == pt.y && this.z == pt.z;

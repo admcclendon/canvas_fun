@@ -218,12 +218,17 @@ class Matrix
     return this.Add(m);
   }
   
-  operator -(Matrix m)
+  Matrix Subtract(Matrix m)
   {
     if (this.m != m.m || this.n != m.n)
     {
       throw new Exception('The matrix dimensions must match.');
     }
     return new Matrix(this.m, this.n, (int i, int j) => this[[i,j]] - m[[i,j]]);
+  }
+  
+  operator -(Matrix m)
+  {
+    return this.Subtract(m);
   }
 }
