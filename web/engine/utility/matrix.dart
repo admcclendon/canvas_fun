@@ -188,13 +188,13 @@ class Matrix
   
   Matrix.Scalar(num a) : this(1, 1, (int i, int j) => a);
   
-  operator [](List<int> indicies) 
+  Matrix.RotateX(double theta) : this(3, 3, (int i, int j) => RotationX(i, j, theta));
+  Matrix.RotateY(double theta) : this(3, 3, (int i, int j) => RotationY(i, j, theta));
+  Matrix.RotateZ(double theta) : this(3, 3, (int i, int j) => RotationZ(i, j, theta));
+  
+  Matrix Abs()
   {
-    return this.values[indicies[0] + indicies[1]*this.m];
-  }
-  operator []=(List<int> indicies, num value)
-  {
-    this.values[indicies[0] + indicies[1]*this.m] = value;
+    return new Matrix(this.m, this.n, (int i, int j) => this[[i, j]].abs());
   }
   
   Matrix Multiply(Matrix m)
@@ -206,11 +206,6 @@ class Matrix
     return new Matrix(this.m, m.n, (int i, int j) => MatrixMultiplication(i, j, this, m));
   }
   
-  operator *(Matrix m)
-  {
-    return this.Multiply(m);
-  }
-  
   Matrix Add(Matrix m)
   {
     if (this.m != m.m || this.n != m.n)
@@ -220,11 +215,6 @@ class Matrix
     return new Matrix(this.m, this.n, (int i, int j) => MatrixAddition(i, j, this, m));
   }
   
-  operator +(Matrix m)
-  {
-    return this.Add(m);
-  }
-  
   Matrix Subtract(Matrix m)
   {
     if (this.m != m.m || this.n != m.n)
@@ -232,6 +222,26 @@ class Matrix
       throw new Exception('The matrix dimensions must match.');
     }
     return new Matrix(this.m, this.n, (int i, int j) => this[[i,j]] - m[[i,j]]);
+  }
+  
+  double operator [](List<int> indicies) 
+  {
+    return this.values[indicies[0]*this.n + indicies[1]];
+  }
+  
+  operator []=(List<int> indicies, num value)
+  {
+    this.values[indicies[0]*this.n + indicies[1]] = value;
+  }
+  
+  operator *(Matrix m)
+  {
+    return this.Multiply(m);
+  }
+  
+  operator +(Matrix m)
+  {
+    return this.Add(m);
   }
   
   operator -(Matrix m)

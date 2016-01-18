@@ -77,6 +77,11 @@ class Point3D extends Matrix
     return new Point3D(this.y*pt.z - this.z*pt.y, this.z*pt.x - this.x*pt.z, this.x*pt.y - this.y*pt.x);
   }
   
+  Point3D Abs()
+  {
+    return new Point3D.fromMatrix(super.Abs());
+  }
+  
   Point3D operator +(Point3D pt)
   {
     return new Point3D.fromMatrix(this.Add(pt));
@@ -98,6 +103,21 @@ class Point3D extends Matrix
   bool operator ==(Point3D pt)
   {
     return this.x == pt.x && this.y == pt.y && this.z == pt.z;
+  }
+  
+  bool operator <(Point3D pt)
+  {
+    return this.x < pt.x && this.y < pt.y && this.z < pt.z;
+  }
+  
+  bool operator <=(Point3D pt)
+  {
+    return this.x <= pt.x && this.y <= pt.y && this.z <= pt.z;
+  }
+  
+  String toString()
+  {
+    return "(" + this.x.toString() + ", " + this.y.toString() + ", " + this.z.toString() + ")";
   }
 }
 
